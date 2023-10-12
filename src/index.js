@@ -1,39 +1,67 @@
 module.exports = function check(str, bracketsConfig) {
   let stackOfStr =[];
+  const Open = [];
+  const Close = [];
 
-  const Open_Brackets = [];
-  const Close_Brackets = [];
-  for (let a = 0; a < bracketsConfig.lenght; a=a+2){
-    let oBrackets = bracketsConfig[a];
-      Open_Brackets.push(oBrackets);
-  }
-
-  for (let a = 0; a < bracketsConfig.lenght; a=a+2){
-    for (let b = 1; b < bracketsConfig.lenght; b=b+2){
-    //for (let a = 0; a < bracketsConfig.lenght; a=a+2){
-    let cBrackets = bracketsConfig[b];
-      Close_Brackets.push(bracketsConfig[a]+':'+cBrackets);
-      console.log(Close_Brackets);
-  }
-}
-
-  for (let i=0; i< str.lenght; i++){
+bracketsConfig.forEach(e => {
+//console.log(e)
+const [o,c] = e
+//console.log(o)
+//console.log(c)
+Open.push(o);
+Close.push(c)
+})
+//console.log(Open)
+//console.log(Close)
+for (let i=0; i< str.length; i++){
     let currentSymbol = str[i];
-
-    if(Open_Brackets.includes(currentSymbol)){
-      stackOfStr.push(currentSymbol);
-    } else {
-      if (stackOfStr.length === 0) {
-        return false;
-      }
-      let topElement = stackOfStr[stackOfStr.length -1];
-
-      if(Close_Brackets[currentSymbol] === topElement){
-        stackOfStr.pop();
-      } else {
-        return false;
-      }
+    
+if (Open.includes(currentSymbol) && !Close.includes(currentSymbol)){
+  stackOfStr.push(currentSymbol);
+  //console.log (stackOfStr)
+} else if (Open.includes(currentSymbol) && Close.includes(currentSymbol) && stackOfStr.length>0) {
+  if(stackOfStr.indexOf(currentSymbol) === stackOfStr.length-1){
+      //console.log(i)
+      stackOfStr.pop();
+    }else 
+  stackOfStr.push(currentSymbol)
+  //console.log ('specSymbol')
+  if (stackOfStr.includes(currentSymbol)){
+    //console.log(stackOfStr.indexOf(currentSymbol))
+    //console.log(stackOfStr.length-1)
+    //console.log('inclused')
+    if (stackOfStr.indexOf(currentSymbol) < stackOfStr.length-1){
+      //console.log('currentSymbol)<stackOfStr.length-1')
+      //console.log(stackOfStr.indexOf(currentSymbol))
+      //console.log(stackOfStr.length-1)
+      return false
+    }else {
+      //console.log(i)
+      //console.log('filter')
+        arr = stackOfStr.filter((current) => current !== currentSymbol);
+        stackOfStr = arr
+      //console.log(stackOfStr)
     }
+    
+  } 
+}  else if (Close.includes(currentSymbol) && stackOfStr.length == 0) {
+  //console.log ('stackOfStr.length == 0');
+  //return false
+  stackOfStr.push(currentSymbol)
+} else {
+  //console.log(currentSymbol)
+  const indexOpen = Close.indexOf(currentSymbol) 
+  //console.log(Close.indexOf(currentSymbol))
+  if (Open[indexOpen] === stackOfStr[stackOfStr.length -1]){
+    //console.log('pop')
+    stackOfStr.pop();
+  } else {
+    //console.log('close without open')
+    return false
   }
-  return stackOfStr.length === 0;
+
+}
+}
+      //console.log (stackOfStr)
+      return stackOfStr.length === 0;
 }
